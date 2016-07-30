@@ -5,5 +5,4 @@
 ## Author: MrTheSoulz
 
 core.lua
-Fish.lua
 FishingBot.lua
