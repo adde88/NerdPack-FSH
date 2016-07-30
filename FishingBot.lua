@@ -1,8 +1,9 @@
 local FshSpell = 131474
 
 -- Offsets
-local OBJECT_BOBBING_OFFSET = 0x1e0
+local OBJECT_BOBBING_OFFSET = 0xF8
 local OBJECT_CREATOR_OFFSET = 0x30
+--if EWT then OBJECT_BOBBING_OFFSET = 'CGGameObject_C__Animation' end
 
 -- Vars
 local _fishRun = false
@@ -115,7 +116,7 @@ local config = {
 		{ type = 'spacer' },
 			{ type = 'button', text = 'Start Fishing', width = 230, height = 20, callback = function(self, button)
 				-- Required APIS
-				if IsHackEnabled and ObjectInteract and ObjectField then
+				if IsHackEnabled and InteractUnit and ObjectField then
 					if _fishRun then
 						self:SetText('Start Fishing')
 						JumpOrAscendStart() -- Jump to stop channeling.
@@ -174,18 +175,18 @@ local function IsObjectCreatedBy(owner, object)
 	return tonumber(ObjectDescriptor(object, OBJECT_CREATOR_OFFSET, Types.ULong)) == GetObjectGUID(owner)
 end
 
-local BobberName = 'Fishing Bobber'
-local BobberCache
+local BobberID = '35591'
+local BobberCache = nil
 local function getBobber()
 	if BobberCache and ObjectExists(BobberCache) then return BobberCache end
-	for i = 1, ObjectCount(TYPE_GAMEOBJECT) do
-		local Object = ObjectWithIndex(i)
-		local ObjectName = ObjectName(ObjectPointer(Object))
+	for i=1, #NeP.OM.GameObjects do
+		local Obj = NeP.OM.GameObjects[i]
+		local oID = tostring(Obj.id)
 
-		if IsObjectCreatedBy('player', Object) then
-			if ObjectName == BobberName then
-				BobberCache = Object
-				return Object
+		if BobberID == oID then
+			if IsObjectCreatedBy('player', Obj.key) then
+				BobberCache = Obj.key
+				return Obj.key
 			end
 		end
 	end
@@ -202,9 +203,9 @@ local FishCD = 0
 local function _startFish()
 	local BobberObject = getBobber()
 	if BobberObject then
-		local bobbing = ObjectField(getBobber(), OBJECT_BOBBING_OFFSET, Types.Short)
+		local bobbing = ObjectField(getBobber(), OBJECT_BOBBING_OFFSET, Types.Bool)
 		if bobbing == 1 then
-			ObjectInteract(getBobber())
+			InteractUnit(getBobber())
 			DoCountLoot = true
 		end
 	else
@@ -466,7 +467,7 @@ C_Timer.NewTicker(0.5, (function()
 		if BagSpace() > 2 then
 
 			-- Update GUI Elements
-			if _timeStarted ~= nil then
+			if _timeStarted then
 				fshGUI.elements.current_Time:SetText(FormatTime(NeP.Core.Round(GetTime() - _timeStarted)))
 				fshGUI.elements.current_Loot:SetText(_Lootedcounter)
 			end
