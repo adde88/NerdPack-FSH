@@ -1,5 +1,3 @@
-local FshSpell = 131474
-
 -- Offsets
 local OBJECT_BOBBING_OFFSET = 0xF8
 local OBJECT_CREATOR_OFFSET = 0x30
@@ -9,6 +7,7 @@ local OBJECT_CREATOR_OFFSET = 0x30
 local _fishRun = false
 local _timeStarted = nil
 local _Lootedcounter = 0
+local FshSpell = 131474
 
 local function ItemInBag( ItemID )
 	local ItemCount = 0
@@ -81,9 +80,10 @@ local config = {
 	subtitle = 'Fishing Bot Settings',
 	color = NeP.Interface.addonColor,
 	width = 250,
-	height = 300,
+	height = 310,
 	config = {
-		{ type = 'header', text = '|cff'..NeP.Interface.addonColor..'Fishing Bot:', size = 25, align = 'Center'},
+		{ type = 'header', text = '|cff'..NeP.Interface.addonColor..'Fishing Bot', size = 25, align = 'Center'},
+		{ type = 'text', text = NeP.FSH.Version, align = 'Center'},
 		{ type = 'text', text = '|cfffd1c15[Warning]|r Requires A Supported Unlocker', align = 'Center' },
 		-- [[ Settings ]]
 		{ type = 'rule' },{ type = 'spacer' },
