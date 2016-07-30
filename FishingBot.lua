@@ -66,6 +66,10 @@ local function equipNormalGear()
 	wipe(_currentGear)
 end
 
+local function error(text)
+	NeP.Core.Message('[|cff'..NeP.Interface.addonColor..'Fishing Bot|r]: '..text)
+end
+
 --[[-----------------------------------------------
 ** GUI table **
 ---------------------------------------------------]]
@@ -79,7 +83,7 @@ local config = {
 	height = 300,
 	config = {
 		{ type = 'header', text = '|cff'..NeP.Interface.addonColor..'Fishing Bot:', size = 25, align = 'Center'},
-		{ type = 'text', text = '|cfffd1c15[Warning]|r Requires FireHack', align = 'Center' },
+		{ type = 'text', text = '|cfffd1c15[Warning]|r Requires A Supported Unlocker', align = 'Center' },
 		-- [[ Settings ]]
 		{ type = 'rule' },{ type = 'spacer' },
 			{ type = 'dropdown', text = 'Bait:', key = 'bait', width = 170, list = {
@@ -110,7 +114,8 @@ local config = {
 		-- [[ Start Button ]]
 		{ type = 'spacer' },
 			{ type = 'button', text = 'Start Fishing', width = 230, height = 20, callback = function(self, button)
-				if IsHackEnabled then
+				-- Required APIS
+				if IsHackEnabled and ObjectInteract and ObjectField then
 					if _fishRun then
 						self:SetText('Start Fishing')
 						JumpOrAscendStart() -- Jump to stop channeling.
@@ -124,7 +129,7 @@ local config = {
 					end
 					_fishRun = not _fishRun
 				else
-					NeP.Core.Message('[|cff'..NeP.Interface.addonColor..'Fishing Bot|r]: You\' not running FireHack!')
+					error('Your unlocker is not supported!')
 				end
 			end},
 	}	
@@ -478,7 +483,7 @@ C_Timer.NewTicker(0.5, (function()
 				_startFish()
 			end
 		else
-			NeP.Core.Message('[|cff'..NeP.Interface.addonColor..'Fishing Bot|r]: Not Enough Bag Space.')
+			error('Not Enough Bag Space.')
 		end
 	end
 
