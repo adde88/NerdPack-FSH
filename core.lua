@@ -1,6 +1,14 @@
 NeP.FSH = {
-	Version = '1.1.0'
+	Version = 1.2
 }
+
+-- Core version check
+if NeP.Info.Version >= 70.1 then
+    NeP.Core.Print('Loaded Fishing Module v:'..NeP.FSH.Version)
+else
+    NeP.Core.Print('Failed to Fishing Module.\nYour Core is outdated.')
+    return
+end
 
 Types = {
     Bool = "bool",
