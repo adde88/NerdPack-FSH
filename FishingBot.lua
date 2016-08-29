@@ -223,6 +223,7 @@ local function _startFish()
 	local BobberObject = getBobber()
 	if BobberObject then
 		local bobbing = ObjectField(getBobber(), OBJECT_BOBBING_OFFSET, Types.Bool)
+		if bobbing == 0 then bobbing = false end
 		if bobbing then
 			InteractUnit(getBobber())
 			DoCountLoot = true
