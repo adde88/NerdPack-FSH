@@ -1,13 +1,23 @@
 -- Offsets
-local OBJECT_BOBBING_OFFSET = 0xF8
-local OBJECT_CREATOR_OFFSET = 0x30
---if EWT then OBJECT_BOBBING_OFFSET = 'CGGameObject_C__Animation' end
+local OBJECT_BOBBING_OFFSET = nil
+local OBJECT_CREATOR_OFFSET = nil
 
 -- Vars
 local _fishRun = false
 local _timeStarted = nil
 local _Lootedcounter = 0
 local FshSpell = 131474
+
+-- Offsets change betweem 64bit and 32bit
+local function SetOffsets()
+	if EWT then
+		OBJECT_BOBBING_OFFSET = 0xF8
+		OBJECT_CREATOR_OFFSET = 0x30
+	elseif FireHack then
+		OBJECT_BOBBING_OFFSET = 0x1C4
+		OBJECT_CREATOR_OFFSET = 0x30
+	end
+end
 
 local function ItemInBag( ItemID )
 	local ItemCount = 0
@@ -67,7 +77,7 @@ local function equipNormalGear()
 end
 
 local function error(text)
-	NeP.Core.Message('[|cff'..NeP.Interface.addonColor..'Fishing Bot|r]: '..text)
+	NeP.Core.Message(NeP.Interface.addonColor..'[Fishing Bot]|r: '..text)
 end
 
 --[[-----------------------------------------------
@@ -116,19 +126,24 @@ local config = {
 		{ type = 'spacer' },
 			{ type = 'button', text = 'Start Fishing', width = 230, height = 20, callback = function(self, button)
 				-- Required APIS
-				if IsHackEnabled and InteractUnit and ObjectField then
-					if _fishRun then
-						self:SetText('Start Fishing')
-						JumpOrAscendStart() -- Jump to stop channeling.
-						equipNormalGear()
-						_timeStarted = nil
+				if InteractUnit and ObjectField then
+					SetOffsets()
+					if OBJECT_BOBBING_OFFSET and OBJECT_CREATOR_OFFSET then
+						if _fishRun then
+							self:SetText('Start Fishing')
+							JumpOrAscendStart() -- Jump to stop channeling.
+							equipNormalGear()
+							_timeStarted = nil
+						else
+							self:SetText('Stop Fishing')
+							local currentTime = GetTime()
+							_timeStarted = currentTime
+							_Lootedcounter = 0
+						end
+						_fishRun = not _fishRun
 					else
-						self:SetText('Stop Fishing')
-						local currentTime = GetTime()
-						_timeStarted = currentTime
-						_Lootedcounter = 0
+						error('Failed to find the offsets')
 					end
-					_fishRun = not _fishRun
 				else
 					error('Your unlocker is not supported!')
 				end
@@ -168,11 +183,15 @@ Only Suppoted by FH atm...
 Build By: MTS
 ---------------------------------------------------]]
 local function GetObjectGUID(object)
-	return tonumber(ObjectDescriptor(object, 0, Types.ULong))
+	if ObjectExists(object) then
+		return tonumber(ObjectDescriptor(object, 0, Types.ULong))
+	end
 end
 
 local function IsObjectCreatedBy(owner, object)
-	return tonumber(ObjectDescriptor(object, OBJECT_CREATOR_OFFSET, Types.ULong)) == GetObjectGUID(owner)
+	if ObjectExists(owner) and ObjectExists(object) then
+		return tonumber(ObjectDescriptor(object, OBJECT_CREATOR_OFFSET, Types.ULong)) == GetObjectGUID(owner)
+	end
 end
 
 local BobberID = '35591'
@@ -204,7 +223,7 @@ local function _startFish()
 	local BobberObject = getBobber()
 	if BobberObject then
 		local bobbing = ObjectField(getBobber(), OBJECT_BOBBING_OFFSET, Types.Bool)
-		if bobbing == 1 then
+		if bobbing then
 			InteractUnit(getBobber())
 			DoCountLoot = true
 		end
