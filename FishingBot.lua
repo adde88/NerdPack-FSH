@@ -198,8 +198,8 @@ local BobberID = '35591'
 local BobberCache = nil
 local function getBobber()
 	if BobberCache and ObjectExists(BobberCache) then return BobberCache end
-	for i=1, #NeP.OM.GameObjects do
-		local Obj = NeP.OM.GameObjects[i]
+	for i=1, #NeP.OM['GameObjects'] do
+		local Obj = NeP.OM['GameObjects'][i]
 		local oID = tostring(Obj.id)
 
 		if BobberID == oID then
