@@ -128,7 +128,6 @@ local function getBobber()
 	for i=1, #NeP.OM['GameObjects'] do
 		local Obj = NeP.OM['GameObjects'][i]
 		local oID = tostring(Obj.id)
-
 		if BobberID == oID then
 			if IsObjectCreatedBy('player', Obj.key) then
 				BobberCache = Obj.key
@@ -172,7 +171,7 @@ local HookCD = 0
 function FSH:FishHook()
 	if getBobber() then return end -- if we are fishing we don't want to interrupt it.
 	if UnitCastingInfo('player') then return true end -- we are casting stop here.
-	if NeP.Interface:fetchKey('NeP_fishingBot', 'ApplyFSH.FishHooks') and GetTime() > HookCD then
+	if NeP.Interface:Fetch('NeP_fishingBot', 'ApplyFSH.FishHooks') and GetTime() > HookCD then
 		if select(7, GetItemInfo(GetInventoryItemLink('player', 16))) == 'Fishing Poles' then
 			local hasEnchant, timeleft, _, enchantID = GetWeaponEnchantInfo()
 			if hasEnchant and timeleft / 1000 > 15 then
@@ -205,7 +204,7 @@ local BladeBoneCD = 0
 function FSH:BladeBone()
 	if getBobber() then return end -- if we are fishing we don't want to interrupt it.
 	if UnitCastingInfo('player') then return true end -- we are casting stop here.
-	if NeP.Interface:fetchKey('NeP_fishingBot', 'BladeBoneHook') and GetTime() > BladeBoneCD then
+	if NeP.Interface:Fetch('NeP_fishingBot', 'BladeBoneHook') and GetTime() > BladeBoneCD then
 		local expires = select(7, UnitBuff('player', GetSpellInfo(182226)))
 		if expires and expires - GetTime() > 15 then return end
 		local HasItem, Count = ItemInBag(122742)
@@ -240,7 +239,7 @@ local function _findHats()
 end
 
 function FSH:equitHat()
-	if NeP.Interface:fetchKey('NeP_fishingBot', 'FshHat') then
+	if NeP.Interface:Fetch('NeP_fishingBot', 'FshHat') then
 		local hatsFound = _findHats()
 		if #hatsFound > 0 then
 			local headItemID = GetInventoryItemID('player', 1)
@@ -278,7 +277,7 @@ local function _findPoles()
 end
 
 function FSH:equitPole()
-	if NeP.Interface:fetchKey('NeP_fishingBot', 'FshPole') then
+	if NeP.Interface:Fetch('NeP_fishingBot', 'FshPole') then
 		local polesFound = _findPoles()
 		if #polesFound > 0 then
 			local weaponItemID = GetInventoryItemID('player', 16)
@@ -303,9 +302,9 @@ Build By: MTS
 ---------------------------------------------------]]
 function FSH:AutoBait()
 	if getBobber() then return end
-	if NeP.Interface:fetchKey('NeP_fishingBot', 'bait') ~= 'none' or NeP.Interface:fetchKey('NeP_fishingBot', 'bait') ~= nil then
-		if FSH.baitsTable[NeP.Interface:fetchKey('NeP_fishingBot', 'bait')] ~= nil then
-			local _Bait = FSH.baitsTable[NeP.Interface:fetchKey('NeP_fishingBot', 'bait')]
+	if NeP.Interface:Fetch('NeP_fishingBot', 'bait') ~= 'none' or NeP.Interface:Fetch('NeP_fishingBot', 'bait') ~= nil then
+		if FSH.baitsTable[NeP.Interface:Fetch('NeP_fishingBot', 'bait')] ~= nil then
+			local _Bait = FSH.baitsTable[NeP.Interface:Fetch('NeP_fishingBot', 'bait')]
 			if GetItemCount(_Bait.ID, false, false) > 0 then
 				local endtime = select(7, UnitBuff('player', GetSpellInfo(_Bait.Debuff)))
 				if (not endtime) or endtime < GetTime() + 14 then
@@ -318,7 +317,7 @@ function FSH:AutoBait()
 end
 
 function FSH:CarpDestruction()
-	if NeP.Interface:fetchKey('NeP_fishingBot', 'LunarfallCarp') then
+	if NeP.Interface:Fetch('NeP_fishingBot', 'LunarfallCarp') then
 		deleteItem(116158, 0)
 	end
 end
