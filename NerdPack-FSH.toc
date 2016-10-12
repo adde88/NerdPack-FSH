@@ -5,4 +5,6 @@
 ## Author: MrTheSoulz
 
 core.lua
+tables.lua
+gui.lua
 FishingBot.lua
