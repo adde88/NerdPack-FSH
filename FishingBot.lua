@@ -34,16 +34,16 @@ local GetWeaponEnchantInfo     = GetWeaponEnchantInfo
 local GetInventoryItemLink     = GetInventoryItemLink
 local C_Timer                  = C_Timer
 local JumpOrAscendStart        = JumpOrAscendStart
-local CastSpellByName          = CastSpellByName
 
 -- Vars
-local NeP            = NeP
-local _fishRun       = false
-local _timeStarted   = nil
-local _Lootedcounter = 0
-local FshSpell       = 131474
-local BobberID       = GetSpellInfo(35591)
-local DoCountLoot    = false
+local NeP         = NeP
+FSH.fishRun       = false
+FSH.timeStarted   = nil
+FSH.Lootedcounter = 0
+FSH.currentGear   = {}
+FSH.FshSpell      = 131474
+FSH.BobberID      = 35591
+FSH.DoCountLoot   = false
 
 -- Advanced APIs
 local EWT              = EWT
@@ -112,25 +112,24 @@ local function deleteItem(ID, number)
 end
 
 --[[-----------------------------------------------
-** equipNormalGear **
+** FSH:equipNormalGear **
 DESC: Equip the gear we had before starting.
 
 Build By: MTS
 ---------------------------------------------------]]
-local _currentGear = {}
-local function equipNormalGear()
-	if #_currentGear > 0 then
-		for k=1, #_currentGear do
-			NeP.Core:Print(n_name, '(Reseting Gear): '..GetItemInfo(_currentGear[k])..' (remaning): '..#_currentGear)
-			pickupItem(_currentGear[k])
+function FSH:equipNormalGear()
+	if #self.currentGear > 0 then
+		for k=1, #self.currentGear do
+			NeP.Core:Print(n_name, '(Reseting Gear): '..GetItemInfo(self.currentGear[k])..' (remaning): '..#self.currentGear)
+			pickupItem(self.currentGear[k])
 			AutoEquipCursorItem()
 		end
 	end
-	wipe(_currentGear)
+	wipe(self.currentGear)
 end
 
 --[[-----------------------------------------------
-** DoCountLoot **
+** FSH.DoCountLoot **
 DESC: Counts the loot from fishing.
 
 Build By: darkjacky @ github
@@ -138,12 +137,12 @@ Build By: darkjacky @ github
 local CounterFrame = CreateFrame('frame')
 CounterFrame:RegisterEvent('LOOT_READY')
 CounterFrame:SetScript('OnEvent', function()
-	if DoCountLoot then -- only count when triggered by FSH:startFish()
-		DoCountLoot = false -- trigger once.
+	if FSH.DoCountLoot then -- only count when triggered by FSH:startFish()
+		FSH.DoCountLoot = false -- trigger once.
 		for i=1,GetNumLootItems() do
 			local lootQuantity = select(3, GetLootSlotInfo(i))
-			_Lootedcounter = _Lootedcounter + lootQuantity
-			FSH.GUI.elements.current_average:SetText(math.floor(3600 / (GetTime() - _timeStarted) * _Lootedcounter))
+			FSH.Lootedcounter = FSH.Lootedcounter + lootQuantity
+			--FSH.GUI.elements.current_average:SetText(math.floor(3600 / (GetTime() - FSH.timeStarted) * FSH.Lootedcounter))
 		end
 	end
 end )
@@ -171,7 +170,7 @@ local BobberCache = nil
 local function getBobber()
 	if BobberCache and ObjectExists(BobberCache) then return BobberCache end
 	for _, Obj in pairs(NeP.OM:Get('Objects')) do
-		if BobberID == Obj.id then
+		if FSH.BobberID == Obj.id then
 			if IsObjectCreatedBy('player', Obj.key) then
 				BobberCache = Obj.key
 				return Obj.key
@@ -194,12 +193,12 @@ function FSH:startFish()
 		local bobbing = ObjectField(getBobber(), OBJECT_BOBBING_OFFSET, FSH.Types.Bool)
 		if bobbing == true or bobbing == 1 then
 			InteractUnit(getBobber())
-			DoCountLoot = true
+			FSH.DoCountLoot = true
 		end
 	else
 		if (not InCombatLockdown()) and GetNumLootItems() == 0 and FishCD < GetTime() then -- not in combat, not looting, and not soon after trying to cast fishing.
 			FishCD = GetTime() + 2
-			CastSpellByName(FshSpell)
+			NeP:Queue(FSH.FshSpell)
 		end
 	end
 end
@@ -289,7 +288,7 @@ function FSH:equitHat()
 			local bestHat = hatsFound[1]
 			if headItemID ~= bestHat.ID then
 				NeP.Core:Print(n_name, '(Equiped): '..bestHat.Name)
-				_currentGear[#_currentGear+1] = headItemID
+				FSH.currentGear[#FSH.currentGear+1] = headItemID
 				pickupItem(bestHat.ID)
 				AutoEquipCursorItem()
 			end
@@ -327,10 +326,10 @@ function FSH:equitPole()
 			local bestPole = polesFound[1]
 			if weaponItemID ~= bestPole.ID then
 				NeP.Core:Print(n_name, '(Equiped): '..bestPole.Name)
-				_currentGear[#_currentGear+1] = weaponItemID
+				FSH.currentGear[#FSH.currentGear+1] = weaponItemID
 				-- Also equip OffHand if user had one.
 				if GetInventoryItemID('player', 17) then
-					_currentGear[#_currentGear+1] = GetInventoryItemID('player', 17)
+					FSH.currentGear[#FSH.currentGear+1] = GetInventoryItemID('player', 17)
 				end
 				pickupItem(bestPole.ID)
 				AutoEquipCursorItem()
@@ -396,30 +395,30 @@ end
 function FSH.Start(self)
 	-- Required APIS
 	if FSH:SetOffsets() then
-		if _fishRun then
+		if FSH.fishRun then
 			self:SetText('Start Fishing')
 			JumpOrAscendStart() -- Jump to stop channeling.
-			equipNormalGear()
-			_timeStarted = nil
+			FSH:equipNormalGear()
+			FSH.timeStarted = nil
 		else
 			self:SetText('Stop Fishing')
 			local currentTime = GetTime()
-				_timeStarted = currentTime
-				_Lootedcounter = 0
+				FSH.timeStarted = currentTime
+				FSH.Lootedcounter = 0
 		end
-		_fishRun = not _fishRun
+		FSH.fishRun = not FSH.fishRun
 	end
 end
 
 C_Timer.NewTicker(0.5, (function()
 
-	if not _fishRun then return end
+	if not FSH.fishRun then return end
 	if FSH:BagSpace() < 2 then NeP.Core:Print(n_name, 'Not Enough Bag Space.'); return end
 
 	-- Update GUI Elements (FIXME: current GUI stuff does not work like this anymore)
-	--if _timeStarted then
-		--FSH.GUI.elements.current_Time:SetText(FormatTime(NeP.Core.Round(GetTime() - _timeStarted)))
-		--FSH.GUI.elements.current_Loot:SetText(_Lootedcounter)
+	--if FSH.timeStarted then
+		--FSH.GUI.elements.current_Time:SetText(FormatTime(NeP.Core.Round(GetTime() - FSH.timeStarted)))
+		--FSH.GUI.elements.current_Loot:SetText(FSH.Lootedcounter)
 	--end
 
 	FSH:CarpDestruction()
