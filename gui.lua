@@ -14,7 +14,7 @@ local config = {
         -- [[ Settings ]]
         { type = 'rule' },{ type = 'spacer' },
             { type = 'dropdown', text = 'Bait:', key = 'bait', width = 170, list = {
-                {text = 'None', key = 'none'},  
+                {text = 'None', key = 'none'},
                 {text = 'Jawless Skulker', key = 'jsb'},
                 {text = 'Fat Sleeper', key = 'fsb'},
                 {text = 'Blind Lake Sturgeon', key = 'blsb'},
@@ -40,31 +40,8 @@ local config = {
             { key = 'current_average', type = 'text', text = '...', size = 11, align = 'right', offset = 0 },
         -- [[ Start Button ]]
         { type = 'spacer' },
-            { type = 'button', text = 'Start Fishing', width = 230, height = 20, callback = function(self, button)
-                -- Required APIS
-                if InteractUnit and ObjectField then
-                    SetOffsets()
-                    if OBJECT_BOBBING_OFFSET and OBJECT_CREATOR_OFFSET then
-                        if _fishRun then
-                            self:SetText('Start Fishing')
-                            JumpOrAscendStart() -- Jump to stop channeling.
-                            equipNormalGear()
-                            _timeStarted = nil
-                        else
-                            self:SetText('Stop Fishing')
-                            local currentTime = GetTime()
-                            _timeStarted = currentTime
-                            _Lootedcounter = 0
-                        end
-                        _fishRun = not _fishRun
-                    else
-                        error('Failed to find the offsets')
-                    end
-                else
-                    error('Your unlocker is not supported!')
-                end
-            end},
-    }   
+            { type = 'button', text = 'Start Fishing', width = 230, height = 20, callback = function(self, button) FSH.Start(self, button) end},
+    }
 }
 
 FSH.GUI = NeP.Interface:BuildGUI(config)
