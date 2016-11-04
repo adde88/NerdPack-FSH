@@ -1,7 +1,7 @@
 local n_name, FSH = ...
 
 local config = {
-    key = 'NeP_fishingBot',
+    key = n_name,
     profiles = true,
     title = n_name,
     subtitle = 'Settings',
