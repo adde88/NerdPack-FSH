@@ -6,10 +6,9 @@ local config = {
     title = n_name,
     subtitle = 'Settings',
     width = 250,
-    height = 310,
+    height = 270,
     config = {
-        { type = 'header', text = 'Fishing Bot', size = 25, align = 'Center'},
-        { type = 'text', text = FSH.Version, align = 'Center'},
+        { type = 'header', text = n_name..' |r'..FSH.Version, size = 25, align = 'Center'},
         { type = 'text', text = '|cfffd1c15[Warning]|r Requires A Supported Unlocker', align = 'Center' },
         -- [[ Settings ]]
         { type = 'rule' },{ type = 'spacer' },
