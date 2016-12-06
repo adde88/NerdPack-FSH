@@ -59,8 +59,8 @@ local ObjectField      = ObjectField
 -- Offsets change betweem 64bit and 32bit
 function FSH:SetOffsets()
 	if EWT then
-		OBJECT_BOBBING_OFFSET = self.X86.OBJECT_BOBBING_OFFSET[GameVer]
-		OBJECT_CREATOR_OFFSET = self.X86.OBJECT_CREATOR_OFFSET[GameVer]
+		OBJECT_BOBBING_OFFSET = GetOffset("CGGameObject_C__Animation") 		
+                OBJECT_CREATOR_OFFSET = GetDescriptor("CGGameObjectData", "CreatedBy")
 	elseif FireHack then
 		OBJECT_BOBBING_OFFSET = self.X64.OBJECT_BOBBING_OFFSET[GameVer]
 		OBJECT_CREATOR_OFFSET = self.X64.OBJECT_CREATOR_OFFSET[GameVer]
