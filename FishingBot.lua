@@ -397,26 +397,23 @@ function FSH:BagSpace()
 end
 
 function FSH.Start(self)
-	-- Required APIS
-	if FSH:SetOffsets() then
-		if FSH.fishRun then
-			self:SetText('Start Fishing')
-			JumpOrAscendStart() -- Jump to stop channeling.
-			FSH:equipNormalGear()
-			FSH.timeStarted = nil
-			SetCVar("autoLootDefault", FSH.autoloot)
-		else
-			self:SetText('Stop Fishing')
-			local currentTime = GetTime()
-			FSH.timeStarted = currentTime
-			FSH.Lootedcounter = 0
-			SetCVar("autoLootDefault", "1")
-		end
-		FSH.fishRun = not FSH.fishRun
-		-- turn on the mastertoggle
-		if not NeP.DSL:Get('toggle')(_, 'mastertoggle') then
-			NeP.Interface:toggleToggle('mastertoggle')
-		end
+	if FSH.fishRun then
+		self:SetText('Start Fishing')
+		JumpOrAscendStart() -- Jump to stop channeling.
+		FSH:equipNormalGear()
+		FSH.timeStarted = nil
+		SetCVar("autoLootDefault", FSH.autoloot)
+	else
+		self:SetText('Stop Fishing')
+		local currentTime = GetTime()
+		FSH.timeStarted = currentTime
+		FSH.Lootedcounter = 0
+		SetCVar("autoLootDefault", "1")
+	end
+	FSH.fishRun = not FSH.fishRun
+	-- turn on the mastertoggle
+	if not NeP.DSL:Get('toggle')(_, 'mastertoggle') then
+		NeP.Interface:toggleToggle('mastertoggle')
 	end
 end
 
@@ -441,3 +438,6 @@ C_Timer.NewTicker(0.5, (function()
 	FSH:startFish()
 
 end), nil)
+
+-- Find Offsets
+FSH:SetOffsets()
