@@ -40,6 +40,7 @@ local SetCVar                  = SetCVar
 -- Vars
 local NeP         = NeP
 FSH.fishRun       = false
+
 FSH.timeStarted   = nil
 FSH.Lootedcounter = 0
 FSH.currentGear   = {}
@@ -62,8 +63,8 @@ function FSH:SetOffsets()
 		OBJECT_BOBBING_OFFSET = GetOffset("CGGameObject_C__Animation") 		
                 OBJECT_CREATOR_OFFSET = GetDescriptor("CGGameObjectData", "CreatedBy")
 	elseif FireHack then
-		OBJECT_BOBBING_OFFSET = self.X64.OBJECT_BOBBING_OFFSET[GameVer]
-		OBJECT_CREATOR_OFFSET = self.X64.OBJECT_CREATOR_OFFSET[GameVer]
+		OBJECT_BOBBING_OFFSET = self.X64.OBJECT_BOBBING_OFFSET[GameVer] or 0x1C4
+		OBJECT_CREATOR_OFFSET = self.X64.OBJECT_CREATOR_OFFSET[GameVer] or 0x030
 	else
 		NeP.Core:Print(n_name, 'This unlocker is not supported')
 		return false
