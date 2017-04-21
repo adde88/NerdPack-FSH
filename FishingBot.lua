@@ -41,6 +41,7 @@ local SetCVar                  = SetCVar
 local NeP         = NeP
 FSH.fishRun       = false
 
+
 FSH.timeStarted   = nil
 FSH.Lootedcounter = 0
 FSH.currentGear   = {}
@@ -59,20 +60,19 @@ local ObjectField      = ObjectField
 
 -- Offsets change betweem 64bit and 32bit
 function FSH:SetOffsets()
+	-- From EWT's
 	if EWT then
 		OBJECT_BOBBING_OFFSET = GetOffset("CGGameObject_C__Animation") 		
                 OBJECT_CREATOR_OFFSET = GetDescriptor("CGGameObjectData", "CreatedBy")
-	elseif FireHack then
-		OBJECT_BOBBING_OFFSET = self.X64.OBJECT_BOBBING_OFFSET[GameVer] or 0x1C4
-		OBJECT_CREATOR_OFFSET = self.X64.OBJECT_CREATOR_OFFSET[GameVer] or 0x030
+	--From Table
+	elseif self.X64.OBJECT_BOBBING_OFFSET[GameVer] and self.X64.OBJECT_CREATOR_OFFSET[GameVer] then
+		OBJECT_BOBBING_OFFSET = self.X64.OBJECT_BOBBING_OFFSET[GameVer]
+		OBJECT_CREATOR_OFFSET = self.X64.OBJECT_CREATOR_OFFSET[GameVer]
+	-- Defaults
 	else
-		NeP.Core:Print(n_name, 'This unlocker is not supported')
-		return false
-	end
-	--  Check if we have the needed offsets
-	if not (OBJECT_BOBBING_OFFSET or  OBJECT_CREATOR_OFFSET) then
-		NeP.Core:Print(n_name, 'Missing the Offsets for', GameVer)
-		return false
+		NeP.Core:Print(n_name, 'Missing the Offsets for', GameVer, "Trying the default ones...")
+		OBJECT_BOBBING_OFFSET = 0x1C4
+		OBJECT_CREATOR_OFFSET = 0x030
 	end
 	return true
 end
