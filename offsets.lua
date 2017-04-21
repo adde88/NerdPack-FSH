@@ -1,5 +1,19 @@
 local _, FSH = ...
 
+--[[
+You can usualy find the needed offsets in:
+http://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-bots-programs/wow-memory-editing/
+
+This table allows users to manualy inster the offsets and therefore make it work on any unlocked WoW build
+with minimal effort.
+
+  Find the game build with the in-game command:
+  /dump select(2, GetBuildInfo())
+
+  [GameBuild] = OFFSET
+
+]]
+
 ------------------------------------------------------------------------------------
 ----------------------------------------X64-----------------------------------------
 FSH.X64 = {}
