@@ -40,8 +40,6 @@ local CastSpellByID = CastSpellByID
 -- Vars
 local NeP         = NeP
 FSH.fishRun       = false
-
-
 FSH.timeStarted   = nil
 FSH.Lootedcounter = 0
 FSH.currentGear   = {}
@@ -189,23 +187,21 @@ function FSH.BladeBone()
 end
 
 function FSH:findHats()
-	local hatsFound = {}
 	for i = 1, #self.hatsTable do
 		if GetItemCount(self.hatsTable[i].ID, false, false) > 0 then
-			hatsFound[#hatsFound+1] = {
+			self.HatsCache[#FSH.HatsCache+1] = {
 				ID = self.hatsTable[i].ID,
 				Name = self.hatsTable[i].Name,
 				Bonus = self.hatsTable[i].Bonus
 			}
 		end
 	end
-	table.sort(hatsFound, function(a,b) return a.Bonus > b.Bonus end)
-	return hatsFound
+	table.sort(self.HatsCache, function(a,b) return a.Bonus > b.Bonus end)
 end
 
 function FSH:equitHat()
 	if NeP.Interface:Fetch(n_name, 'FshHat') then
-		local hatsFound = self:findHats()
+		local hatsFound = self.HatsCache
 		if #hatsFound > 0 then
 			local headItemID = GetInventoryItemID('player', 1)
 			local bestHat = hatsFound[1]
@@ -220,19 +216,17 @@ function FSH:equitHat()
 end
 
 function FSH:findPoles()
-	local polesFound = {}
 	for i = 1, #self.polesTable do
 		if GetItemCount(self.polesTable[i].ID, false, false) > 0 then
 			--print('found:'..self.polesTable[i].Name)
-			polesFound[#polesFound+1] = {
+			self.PolesCache[#self.PolesCache+1] = {
 				ID = self.polesTable[i].ID,
 				Name = self.polesTable[i].Name,
 				Bonus = self.polesTable[i].Bonus
 			}
 		end
 	end
-	table.sort(polesFound, function(a,b) return a.Bonus > b.Bonus end)
-	return polesFound
+	table.sort(self.PolesCache, function(a,b) return a.Bonus > b.Bonus end)
 end
 
 function FSH:equitPole()
@@ -303,6 +297,11 @@ function FSH.Start(self)
 		FSH:equipNormalGear()
 		FSH.timeStarted = nil
 		SetCVar("autoLootDefault", FSH.autoloot)
+		--Rebuild cache
+		FSH.HatsCache = {}
+		FSH:findHats()
+		FSH.PolesCache = {}
+		FSH:findPoles()
 	else
 		self:SetText('Stop Fishing')
 		local currentTime = GetTime()
