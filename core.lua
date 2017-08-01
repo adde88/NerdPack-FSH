@@ -38,9 +38,13 @@ local GetTime = GetTime
 local ObjectExists = ObjectExists
 local ObjectPointer = ObjectPointer
 local ObjectField = ObjectField
-local ObjectCreator = UnitCreator
+local ObjectCreator = ObjectCreator
 local GetOffset = GetOffset
 local GameObjectIsAnimating = GameObjectIsAnimating
+
+--temp workaround until EWT and FH update
+local ObjectDescriptor = ObjectDescriptor
+ObjectCreator = ObjectCreator or function(object) return ObjectDescriptor(object, 0x30, FSH.Types.GUID) end
 
 -- Vars
 local NeP         = NeP
@@ -62,7 +66,7 @@ function FSH.FindOffsets()
 	if GetOffset then
 		OBJECT_BOBBING_OFFSET = GetOffset("CGGameObject_C__Animation")
 	--From Table
-elseif FSH.X64.OBJECT_BOBBING_OFFSET[GameVer] then
+  elseif FSH.X64.OBJECT_BOBBING_OFFSET[GameVer] then
 		OBJECT_BOBBING_OFFSET = FSH.X64.OBJECT_BOBBING_OFFSET[GameVer]
 	-- Defaults
 	else
