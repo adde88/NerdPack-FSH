@@ -8,7 +8,7 @@ local config = {
     width = 250,
     height = 270,
     config = {
-        { type = 'header', text = n_name..' |r'..FSH.Version, size = 25, align = 'Center'},
+        { type = 'header', text = n_name..' |r'..FSH.Version, size = 25, align = 'CENTER'},
         { type = 'text', text = '|cfffd1c15[Warning]|r Requires A Supported Unlocker', align = 'Center' },
         -- [[ Settings ]]
         { type = 'rule' },{ type = 'spacer' },
@@ -44,5 +44,5 @@ local config = {
 }
 
 FSH.GUI = NeP.Interface:BuildGUI(config)
-NeP.Interface:Add(n_name..' v:'..FSH.Version, function() FSH.GUI:Show() end)
-FSH.GUI:Hide()
+NeP.Interface:Add(n_name..' v:'..FSH.Version, function() FSH.GUI.parent:Show() end)
+FSH.GUI.parent:Hide()
