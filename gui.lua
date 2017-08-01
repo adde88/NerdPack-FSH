@@ -39,7 +39,7 @@ local config = {
             { key = 'current_average', type = 'text', text = '...', size = 11, align = 'right', offset = 0 },
         -- [[ Start Button ]]
         { type = 'spacer' },
-            { type = 'button', text = 'Start Fishing', width = 230, height = 20, callback = function(self, button) FSH.Start(self, button) end},
+            { type = 'button', text = 'Start Fishing', width = 230, height = 20, callback = function(val) FSH:Start(val) end},
     }
 }
 

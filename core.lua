@@ -108,17 +108,17 @@ function FSH:Start(val)
 		self:equipNormalGear()
 		self.timeStarted = nil
 		SetCVar("autoLootDefault", FSH.autoloot)
-		--Rebuild cache
-		self.HatsCache = {}
-		self:findHats()
-		self.PolesCache = {}
-		self:findPoles()
 	else
 		val:SetText('Stop Fishing')
 		local currentTime = GetTime()
 		self.timeStarted = currentTime
 		self.Lootedcounter = 0
 		SetCVar("autoLootDefault", "1")
+    --Rebuild cache
+		self.HatsCache = {}
+		self:findHats()
+		self.PolesCache = {}
+		self:findPoles()
 	end
 	self.fishRun = not self.fishRun
 end
