@@ -6,6 +6,7 @@
 
 core.lua
 offsets.lua
+items.lua
 tables.lua
 gui.lua
 FishingBot.lua
