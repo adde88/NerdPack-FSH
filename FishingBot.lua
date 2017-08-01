@@ -322,6 +322,8 @@ local function IsAnimating(BobberObject)
 	end
 end
 
+local FishCD = 0
+
 local function StartFishing()
 	FSH:CarpDestruction()
 	FSH:equitHat()
@@ -331,7 +333,9 @@ local function StartFishing()
 	if FSH:BladeBone() then return end -- Same here
 	--Start fishing
 	if (not InCombatLockdown())
-	and GetNumLootItems() == 0 then
+	and GetNumLootItems() == 0
+	and FishCD < GetTime() then -- not in combat, not looting, and not soon after trying to cast fishing.
+		FishCD = GetTime() + 2
 		CastSpellByID(FSH.FshSpell)
 	end
 end
