@@ -1,26 +1,5 @@
 local n_name, FSH = ...
 FSH.Version = 1.5
-FSH.Types = {
-    Bool = "bool",
-    Char = "char",
-    Byte = "byte",
-    SByte = "char",
-    UByte = "byte",
-    Short = "short",
-    SShort = "short",
-    UShort = "ushort",
-    Int = "int",
-    SInt = "int",
-    UInt = "uint",
-    Long = "long",
-    SLong = "long",
-    ULong = "ulong",
-    Float = "float",
-    Double = "double",
-    String = "string",
-    GUID = "guid",
-}
-
 local GameVer = select(2, GetBuildInfo())
 GameVer = tonumber(GameVer)
 local InteractUnit = InteractUnit
@@ -44,7 +23,9 @@ local GameObjectIsAnimating = GameObjectIsAnimating
 
 --temp workaround until EWT and FH update
 local ObjectDescriptor = ObjectDescriptor
-ObjectCreator = ObjectCreator or function(object) return ObjectDescriptor(object, 0x30, FSH.Types.GUID) end
+local Types = Types
+ObjectCreator = ObjectCreator or function(Obj) return ObjectDescriptor(Obj, 0x30, Types.GUID) end
+GameObjectIsAnimating = GameObjectIsAnimating or function(Obj) return ObjectField(Obj, 0x1C4, Types.Bool) end
 
 -- Vars
 local NeP         = NeP
@@ -56,25 +37,6 @@ FSH.FshSpell      = 131474
 FSH.BobberID      = 35591
 FSH.DoCountLoot   = false
 FSH.autoloot      = GetCVar("autoLootDefault")
-
--- Offsets
-local OBJECT_BOBBING_OFFSET = nil
-
--- Offsets change betweem 64bit and 32bit
-function FSH.FindOffsets()
-	-- From EWT's
-	if GetOffset then
-		OBJECT_BOBBING_OFFSET = GetOffset("CGGameObject_C__Animation")
-	--From Table
-  elseif FSH.X64.OBJECT_BOBBING_OFFSET[GameVer] then
-		OBJECT_BOBBING_OFFSET = FSH.X64.OBJECT_BOBBING_OFFSET[GameVer]
-	-- Defaults
-	else
-		NeP.Core:Print(n_name, 'Missing the Offsets for', GameVer, "Trying the default ones...")
-		OBJECT_BOBBING_OFFSET = 0x1C4
-	end
-	return true
-end
 
 local function IsObjectCreatedBy(owner, object)
 	local creator = ObjectCreator(object)
@@ -137,15 +99,6 @@ NeP.Listener:Add(n_name, "LOOT_READY", function()
 	end
 end)
 
-local function IsAnimating(BobberObject)
-	if GameObjectIsAnimating then
-		return GameObjectIsAnimating(BobberObject)
-	else
-		if not OBJECT_BOBBING_OFFSET then FSH:FindOffsets() end
-		return ObjectField(BobberObject, OBJECT_BOBBING_OFFSET, FSH.Types.Bool)
-	end
-end
-
 local FishCD = 0
 
 local function StartFishing()
@@ -165,7 +118,7 @@ local function StartFishing()
 end
 
 local function Interact(BobberObject)
-	if IsAnimating(BobberObject) then
+	if GameObjectIsAnimating(BobberObject) then
 		InteractUnit(BobberObject)
 		FSH.DoCountLoot = true
 	end
