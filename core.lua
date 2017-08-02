@@ -90,6 +90,7 @@ function FSH:Start(val)
 end
 
 NeP.Listener:Add(n_name, "LOOT_READY", function()
+	if not FSH.timeStarted then return end
 	for i=1,GetNumLootItems() do
 		local lootQuantity = select(3, GetLootSlotInfo(i))
 		FSH.Lootedcounter = FSH.Lootedcounter + lootQuantity
