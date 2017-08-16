@@ -34,7 +34,10 @@ FSH.timeStarted   = nil
 FSH.Lootedcounter = 0
 FSH.currentGear   = {}
 FSH.FshSpell      = 131474
-FSH.BobberID      = 35591
+FSH.BobberID      = {
+	35591,
+	245190 -- Oversized bobber
+}
 FSH.DoCountLoot   = false
 FSH.autoloot      = GetCVar("autoLootDefault")
 
@@ -47,10 +50,12 @@ local BobberCache = nil
 local function getBobber()
 	if BobberCache and ObjectExists(BobberCache) then return BobberCache end
 	for _, Obj in pairs(NeP.OM:Get('Objects')) do
-		if FSH.BobberID == Obj.id then
-			if IsObjectCreatedBy('player', Obj.key) then
-				BobberCache = Obj.key
-				return BobberCache
+		for i=1, #FSH.BobberID do
+			if FSH.BobberID[i] == Obj.id then
+				if IsObjectCreatedBy('player', Obj.key) then
+					BobberCache = Obj.key
+					return BobberCache
+				end
 			end
 		end
 	end
