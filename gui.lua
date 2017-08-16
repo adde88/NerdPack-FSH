@@ -6,7 +6,7 @@ local config = {
     title = n_name,
     subtitle = 'Settings',
     width = 250,
-    height = 270,
+    height = 250,
     config = {
         { type = 'header', text = n_name..' |r'..FSH.Version, size = 25, align = 'CENTER'},
         { type = 'text', text = '|cfffd1c15[Warning]|r Requires A Supported Unlocker', align = 'Center' },
@@ -29,14 +29,14 @@ local config = {
             {  type = 'checkbox',  text = 'Destroy Lunarfall Carp', key = 'LunarfallCarp', default = false },
         -- [[ Timer ]]
             { type = 'rule' },{ type = 'spacer' },
-            { type = 'text', text = 'Running For: ', size = 11, offset = -11 },
-            { key = 'current_Time', type = 'text', text = '...', size = 11, align = 'right', offset = 0 },
+            { type = 'text', text = 'Running For: ', size = 11, offset = 0 },
+            { key = 'current_Time', type = 'text', text = '...', size = 11, align = 'right' },
             -- Looted Items Counter
-            { type = 'text', text = 'Looted Items: ', size = 11, offset = -11 },
-            { key = 'current_Loot', type = 'text', text = '...', size = 11, align = 'right', offset = 0 },
+            { type = 'text', text = 'Looted Items: ', size = 11, offset = 0 },
+            { key = 'current_Loot', type = 'text', text = '...', size = 11, align = 'right' },
             -- Predicted Average Items Per Hour
-            { type = 'text', text = 'Average Items Per Hour: ', size = 11, offset = -11 },
-            { key = 'current_average', type = 'text', text = '...', size = 11, align = 'right', offset = 0 },
+            { type = 'text', text = 'Average Items Per Hour: ', size = 11, offset = 0 },
+            { key = 'current_average', type = 'text', text = '...', size = 11, align = 'right' },
         -- [[ Start Button ]]
         { type = 'spacer' },
             { type = 'button', text = 'Start Fishing', width = 230, height = 20, callback = function(val) FSH:Start(val) end},
