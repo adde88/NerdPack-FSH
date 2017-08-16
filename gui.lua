@@ -6,7 +6,7 @@ local config = {
     title = n_name,
     subtitle = 'Settings',
     width = 250,
-    height = 250,
+    height = 300,
     config = {
         { type = 'header', text = n_name..' |r'..FSH.Version, size = 25, align = 'CENTER'},
         { type = 'text', text = '|cfffd1c15[Warning]|r Requires A Supported Unlocker', align = 'Center' },
