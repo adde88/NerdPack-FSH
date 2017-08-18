@@ -136,8 +136,8 @@ C_Timer.NewTicker(0.5, (function()
 	-- Update GUI Elements (FIXME: current GUI stuff does not work like this anymore)
 	if FSH.timeStarted then
 		local time = FSH:FormatTime(NeP.Core:Round(GetTime() - FSH.timeStarted))
-		FSH.GUI.elements['current_Time'].parent:SetText(time)
-		FSH.GUI.elements['current_Loot'].parent:SetText(FSH.Lootedcounter)
+		FSH.GUI.elements['current_Time']:SetText(time)
+		FSH.GUI.elements['current_Loot']:SetText(FSH.Lootedcounter)
 	end
 	-- Get BobberObject
 	local BobberObject = getBobber()
