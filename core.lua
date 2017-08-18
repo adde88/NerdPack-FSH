@@ -114,7 +114,6 @@ end)
 
 local FishCD = 0
 local loopfuncs = {
-	"CarpDestruction",
 	"equitHat",
 	"equitPole",
 	"AutoBait",

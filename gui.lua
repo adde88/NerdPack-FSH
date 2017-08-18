@@ -26,7 +26,6 @@ local config = {
             { type = 'checkbox', text = 'Use Fishing Poles', key = 'FshPole', default = true },
             { type = 'checkbox', text = 'Use Fish Hooks', key = 'ApplyFishHooks', default = true },
             { type = 'checkbox', text = 'Use Bladebone Hooks', key = 'BladeBoneHook', default = false },
-            { type = 'checkbox',  text = 'Destroy Lunarfall Carp', key = 'LunarfallCarp', default = false },
             { type = 'checkbox',  text = 'Open Leyscale Koi', key = 'LeyscaleKoi', default = false },
         -- [[ Timer ]]
             { type = 'rule' },{ type = 'spacer' },

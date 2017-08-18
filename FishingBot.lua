@@ -132,10 +132,6 @@ function FSH:AutoBait()
 	end
 end
 
-function FSH.CarpDestruction()
-	return  NeP.Interface:Fetch(n_name, 'LunarfallCarp') and FSH:deleteItem(116158, 0)
-end
-
 function FSH:LeyscaleKoi()
 	return NeP.Interface:Fetch(n_name, 'LeyscaleKoi') and self:UseItem(143748)
 end
