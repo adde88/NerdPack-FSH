@@ -10,6 +10,7 @@ local DeleteCursorItem = DeleteCursorItem
 local AutoEquipCursorItem = AutoEquipCursorItem
 local NUM_BAG_SLOTS = NUM_BAG_SLOTS
 local GetContainerNumFreeSlots = GetContainerNumFreeSlots
+local UseContainerItem = UseContainerItem
 
 function FSH.ItemInBag(_, ItemID)
 	local ItemCount = 0
@@ -22,10 +23,18 @@ function FSH.ItemInBag(_, ItemID)
 			end
 		end
 	end
-	if ItemFound then
-		return true, ItemCount
+	return ItemFound, ItemCount
+end
+
+function FSH.UseItem(_, ItemID)
+	for bag=0,4 do
+		for slot=1,GetContainerNumSlots(bag) do
+			if select(10, GetContainerItemInfo(bag, slot)) == ItemID then
+				UseContainerItem(bag, slot)
+				return true
+			end
+		end
 	end
-	return false, 0
 end
 
 function FSH.pickupItem(_, item)
@@ -45,6 +54,7 @@ function FSH.deleteItem(_, ID, number)
 		FSH:pickupItem(ID)
 		if CursorHasItem() then
 			DeleteCursorItem();
+			return true
 		end
 	end
 end

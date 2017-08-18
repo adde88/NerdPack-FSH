@@ -1,7 +1,6 @@
 local n_name, FSH = ...
 local NeP = NeP
 local UnitBuff = UnitBuff
-local UseItem = UseItem
 local GetTime = GetTime
 local GetSpellInfo = GetSpellInfo
 local UnitCastingInfo = UnitCastingInfo
@@ -23,10 +22,9 @@ function FSH:equipNormalGear()
 	wipe(self.currentGear)
 end
 
-local HookCD = 0
 function FSH:FishHook()
 	if UnitCastingInfo('player') then return true end -- we are casting stop here.
-	if NeP.Interface:Fetch(n_name, 'ApplyFSH.FishHooks') and GetTime() > HookCD
+	if NeP.Interface:Fetch(n_name, 'ApplyFSH.FishHooks')
 	and select(7, GetItemInfo(GetInventoryItemLink('player', 16))) == 'Fishing Poles' then
 		local hasEnchant, timeleft, _, enchantID = GetWeaponEnchantInfo()
 		if hasEnchant and timeleft / 1000 > 15 then
@@ -37,7 +35,6 @@ function FSH:FishHook()
 			for i=1,#self.FishHooks do
 				local HasItem, Count = self:ItemInBag(self.FishHooks[i].ItemID)
 				if HasItem then
-					HookCD = GetTime() + 5 -- it seems to be chain casting it otherwise :S
 					UseItem(self.FishHooks[i].ItemID)
 					NeP.Core:Print(n_name, '(Used Hook): '..self.FishHooks[i].ItemName..' ' ..tostring(Count - 1)..' left.' )
 					return true
@@ -47,15 +44,13 @@ function FSH:FishHook()
 	end
 end
 
-local BladeBoneCD = 0
 function FSH:BladeBone()
 	if UnitCastingInfo('player') then return true end -- we are casting stop here.
-	if NeP.Interface:Fetch(n_name, 'BladeBoneHook') and GetTime() > BladeBoneCD then
+	if NeP.Interface:Fetch(n_name, 'BladeBoneHook') then
 		local expires = select(7, UnitBuff('player', GetSpellInfo(182226)))
 		if expires and expires - GetTime() > 15 then return end
 		local HasItem, Count = self:ItemInBag(122742)
 		if HasItem then
-			BladeBoneCD = GetTime() + 5 -- it seems to be chain casting it otherwise :S
 			UseItem(122742)
 			NeP.Core:Print(n_name, '(Used Hook): '..GetSpellInfo(182226)..' ' ..tostring(Count - 1)..' left.' )
 			return true
@@ -125,12 +120,12 @@ end
 function FSH:AutoBait()
 	if NeP.Interface:Fetch(n_name, 'bait') ~= 'none' or NeP.Interface:Fetch(n_name, 'bait') ~= nil then
 		if self.baitsTable[NeP.Interface:Fetch(n_name, 'bait')] ~= nil then
-			local _Bait = self.baitsTable[NeP.Interface:Fetch(n_name, 'bait')]
-			if GetItemCount(_Bait.ID, false, false) > 0 then
-				local endtime = select(7, UnitBuff('player', GetSpellInfo(_Bait.Debuff)))
+			local bait = self.baitsTable[NeP.Interface:Fetch(n_name, 'bait')]
+			if GetItemCount(bait.ID, false, false) > 0 then
+				local endtime = select(7, UnitBuff('player', GetSpellInfo(bait.Debuff)))
 				if (not endtime) or endtime < GetTime() + 14 then
-					NeP.Core:Print(n_name, '(Used Bait): '.._Bait.Name)
-					UseItem(_Bait.ID)
+					NeP.Core:Print(n_name, '(Used Bait): '..bait.Name)
+					self:UseItem(bait.ID)
 				end
 			end
 		end
@@ -138,7 +133,9 @@ function FSH:AutoBait()
 end
 
 function FSH.CarpDestruction()
-	if NeP.Interface:Fetch(n_name, 'LunarfallCarp') then
-		FSH:deleteItem(116158, 0)
-	end
+	return  NeP.Interface:Fetch(n_name, 'LunarfallCarp') and FSH:deleteItem(116158, 0)
+end
+
+function FSH:LeyscaleKoi()
+	return NeP.Interface:Fetch(n_name, 'LeyscaleKoi') and self:UseItem(143748)
 end

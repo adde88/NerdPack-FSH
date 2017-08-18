@@ -113,21 +113,29 @@ NeP.Listener:Add(n_name, "LOOT_READY", function()
 end)
 
 local FishCD = 0
+local loopfuncs = {
+	"CarpDestruction",
+	"equitHat",
+	"equitPole",
+	"AutoBait",
+	"FishHook",
+	"BladeBone",
+	"LeyscaleKoi"
+}
 
 local function StartFishing()
-	FSH:CarpDestruction()
-	FSH:equitHat()
-	FSH:equitPole()
-	FSH:AutoBait()
-	if FSH:FishHook() then return end -- If it is true we stop because we have to wait.
-	if FSH:BladeBone() then return end -- Same here
+	-- delay
+	if FishCD > GetTime() then return end
+	--stop if any of these is true
+	for i=1, #loopfuncs do
+		if FSH[loopfuncs[i]](FSH) then return end
+	end
 	--Start fishing
 	if (not InCombatLockdown())
-	and GetNumLootItems() == 0
-	and FishCD < GetTime() then -- not in combat, not looting, and not soon after trying to cast fishing.
-		FishCD = GetTime() + 2
+	and GetNumLootItems() == 0 then
 		CastSpellByID(FSH.FshSpell)
 	end
+	FishCD = GetTime() + 2
 end
 
 local function Interact(BobberObject)
