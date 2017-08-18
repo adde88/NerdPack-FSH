@@ -36,7 +36,8 @@ FSH.currentGear   = {}
 FSH.FshSpell      = 131474
 FSH.BobberID      = {
 	35591,
-	245190 -- Oversized bobber
+	245190, -- Oversized bobber
+	241593, -- Can of Worms Boober
 }
 FSH.DoCountLoot   = false
 FSH.autoloot      = GetCVar("autoLootDefault")
