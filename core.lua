@@ -42,6 +42,7 @@ FSH.BobberID      = {
 	241593, -- Can of Worms
 	241594, -- Cat Head
 	266869, -- Wooden Pepe
+	241592, --Tugboat
 }
 
 FSH.DoCountLoot   = false
