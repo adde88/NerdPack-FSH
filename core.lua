@@ -99,7 +99,7 @@ NeP.Listener:Add(n_name, "LOOT_READY", function()
 	for i=1,GetNumLootItems() do
 		local lootQuantity = select(3, GetLootSlotInfo(i))
 		FSH.Lootedcounter = FSH.Lootedcounter + lootQuantity
-		FSH.GUI.elements['current_average'].parent:SetText(
+		FSH.GUI.elements['current_average']:SetText(
 			math.floor(3600 / (GetTime() - FSH.timeStarted) * FSH.Lootedcounter)
 		)
 	end
