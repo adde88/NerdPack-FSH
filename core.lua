@@ -34,11 +34,16 @@ FSH.timeStarted   = nil
 FSH.Lootedcounter = 0
 FSH.currentGear   = {}
 FSH.FshSpell      = 131474
+
+-- List of bobbers
 FSH.BobberID      = {
-	35591,
+	35591, -- noob
 	245190, -- Oversized bobber
-	241593, -- Can of Worms Boober
+	241593, -- Can of Worms
+	241594, -- Cat Head
+	266869, -- Wooden Pepe
 }
+
 FSH.DoCountLoot   = false
 FSH.autoloot      = GetCVar("autoLootDefault")
 
