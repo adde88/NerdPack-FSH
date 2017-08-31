@@ -1,31 +1,13 @@
 local n_name, FSH = ...
-FSH.Version = 1.5
+FSH.Version = 1.6
 local GameVer = select(2, GetBuildInfo())
 GameVer = tonumber(GameVer)
-local InteractUnit = InteractUnit
-local C_Timer = C_Timer
-local JumpOrAscendStart = JumpOrAscendStart
-local GetCVar = GetCVar
-local SetCVar = SetCVar
-local CastSpellByID = CastSpellByID
-local GetLootSlotInfo = GetLootSlotInfo
-local InCombatLockdown = InCombatLockdown
-local GetNumLootItems = GetNumLootItems
-local GetTime = GetTime
 
 -- Advanced APIs
-local ObjectExists = ObjectExists
-local ObjectPointer = ObjectPointer
-local ObjectField = ObjectField
-local ObjectCreator = ObjectCreator
-local GetOffset = GetOffset
-local GameObjectIsAnimating = GameObjectIsAnimating
 
 --temp workaround until EWT and FH update
-local ObjectDescriptor = ObjectDescriptor
-local Types = Types
-ObjectCreator = ObjectCreator or function(Obj) return ObjectDescriptor(Obj, 0x30, Types.GUID) end
-GameObjectIsAnimating = GameObjectIsAnimating or function(Obj) return ObjectField(Obj, 0x1C4, Types.Bool) end
+ObjectCreator = ObjectCreator or function(Obj) return GetObjectDescriptorAccessor(Obj, 0x30, Type.GUID) end
+GameObjectIsAnimating = GameObjectIsAnimating or function(Obj) return GetObjectFieldAccessor(Obj, 0x1C4, Type.Bool) end
 
 -- Vars
 local NeP         = NeP
@@ -37,7 +19,7 @@ FSH.FshSpell      = 131474
 
 -- List of bobbers
 FSH.BobberID      = {
-	35591, -- noob
+	35591, 	-- noob
 	245190, -- Oversized bobber
 	241593, -- Can of Worms
 	241594, -- Cat Head
@@ -50,12 +32,12 @@ FSH.autoloot      = GetCVar("autoLootDefault")
 
 local function IsObjectCreatedBy(owner, object)
 	local creator = ObjectCreator(object)
-	return creator and creator == ObjectPointer(owner)
+	return creator and creator == ObjectIdentifier(owner)
 end
 
 local BobberCache = nil
 local function getBobber()
-	if BobberCache and ObjectExists(BobberCache) then return BobberCache end
+	if BobberCache and ObjectIsVisible(BobberCache) then return BobberCache end
 	for _, Obj in pairs(NeP.OM:Get('Objects')) do
 		for i=1, #FSH.BobberID do
 			if FSH.BobberID[i] == Obj.id then

@@ -1,17 +1,5 @@
 local _, FSH = ...
 
-local GetContainerNumSlots = GetContainerNumSlots
-local GetContainerItemInfo = GetContainerItemInfo
-local GetItemCount = GetItemCount
-local GetContainerItemID = GetContainerItemID
-local PickupContainerItem = PickupContainerItem
-local CursorHasItem = CursorHasItem
-local DeleteCursorItem = DeleteCursorItem
-local AutoEquipCursorItem = AutoEquipCursorItem
-local NUM_BAG_SLOTS = NUM_BAG_SLOTS
-local GetContainerNumFreeSlots = GetContainerNumFreeSlots
-local UseContainerItem = UseContainerItem
-
 function FSH.ItemInBag(_, ItemID)
 	local ItemCount = 0
 	local ItemFound = false

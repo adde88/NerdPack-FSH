@@ -1,16 +1,4 @@
 local n_name, FSH = ...
-local NeP = NeP
-local UnitBuff = UnitBuff
-local GetTime = GetTime
-local GetSpellInfo = GetSpellInfo
-local UnitCastingInfo = UnitCastingInfo
-local wipe = wipe
-local GetInventoryItemID = GetInventoryItemID
-local GetWeaponEnchantInfo = GetWeaponEnchantInfo
-local GetInventoryItemLink = GetInventoryItemLink
-local GetItemInfo = GetItemInfo
-local GetItemCount = GetItemCount
-
 
 function FSH:equipNormalGear()
 	if #self.currentGear > 0 then
